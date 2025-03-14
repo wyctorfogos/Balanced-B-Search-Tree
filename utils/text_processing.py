@@ -50,11 +50,10 @@ class ProcessamentoDados:
         self.resultados.append("\n-- ARVORE B")
         self.resultados.extend(estado_arvore)
 
-    def salvar_dados(self):
+    def salvar_dados(self, resultados_pos_processados):
         try:
             with open(self.arquivo_saida, 'w') as arquivo:
-                for resultado in self.resultados:
-                    arquivo.write(resultado + '\n')
+                arquivo.write(resultados_pos_processados)
         except Exception as e:
             print(f"Erro durante escrita do arquivo: {e}")
             sys.exit(1)

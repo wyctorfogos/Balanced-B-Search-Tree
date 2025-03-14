@@ -1,32 +1,59 @@
 import os
 import sys
-from models.text_processing import ProcessamentoDados
-# Exemplo de uso
+from utils.text_processing import ProcessamentoDados
+from utils.pos_processing import pos_process_data
+from models.tad_arvore_b import ArvoreB
+
 if __name__ == '__main__':
+    # Verifica se o número correto de argumentos foi passado
     if len(sys.argv) != 3:
-        print("Uso correto: python trab2.py <arquivo_entrada> <arquivo_saida>")
+        print("Uso correto: python main.py <arquivo_entrada> <arquivo_saida>")
         sys.exit(1)
 
-    entrada, saida = sys.argv[1], sys.argv[2]
+    entrada = sys.argv[1]
+    saida = sys.argv[2]
 
+    # Verifica se o arquivo de entrada existe
+    if not os.path.exists(entrada):
+        print(f"Erro: O arquivo {entrada} não foi encontrado.")
+        sys.exit(1)
+
+    # Processa os dados do arquivo de entrada
     processamento = ProcessamentoDados(entrada, saida)
     processamento.ler_dados()
 
-    # Demonstração da leitura (para teste inicial):
-    print(f"Ordem da árvore: {processamento.ordem}")
-    print(f"Número de operações: {processamento.num_operacoes}")
-    print("Operações:")
+    # Inicializa a árvore B com a ordem especificada
+    arvore_b = ArvoreB(processamento.ordem)
+
+    resultados_busca = []
+
+    # Executa as operações especificadas no arquivo de entrada
     for op in processamento.operacoes:
-        print(op)
+        if op[0] == 'I':  # Inserção
+            _, chave, registro = op
+            arvore_b.inserir(chave, registro)
 
-    # Exemplo de uso da gravação (substituir pela integração futura)
-    processamento.adicionar_resultado_busca(20, True)
-    processamento.adicionar_resultado_busca(30, False)
+        elif op[0] == 'R':  # Remoção
+            _, chave = op
+            arvore_b.remover(chave)
 
-    exemplo_estado_arvore = [
-        "[key: 51, key: 75, ]",
-        "[key: 20, key: 40, key: 45, ][key: 55, key: 60, key: 62, ][key: 77, ]"
-    ]
+        elif op[0] == 'B':  # Busca
+            _, chave = op
+            encontrado = arvore_b.buscar(chave)
+            resultado = "O REGISTRO ESTA NA ARVORE!" if encontrado else "O REGISTRO NAO ESTA NA ARVORE!"
+            resultados_busca.append(resultado)
 
-    processamento.adicionar_estado_final_arvore(exemplo_estado_arvore)
-    processamento.salvar_dados()
+    # Obtém a estrutura final da árvore B em largura
+    estado_arvore = arvore_b.percorrer_em_largura()
+
+    print(f"Estado da arvore: {estado_arvore}\n")
+    print(f"Resultados da busca: {resultados_busca}\n")
+
+    # Ordenar os dados antes de serem salvos
+    resultados_busca = pos_process_data(resultado_da_busca=resultados_busca, estado_final_da_arvore=estado_arvore)
+
+    # Resultado dos dados estruturados
+    print(f"Resultados: \n{resultados_busca}\n")
+    
+    # Salva os dados da busca e o estado final da árvore no arquivo de saída
+    processamento.salvar_dados(resultados_busca)
