@@ -19,29 +19,30 @@ if __name__ == '__main__':
 
     arvore_b = ArvoreB(processamento.ordem)
     resultados_busca = []
-    
+
     for op in processamento.operacoes:
         try:
             op_name = op[0]
-            
+
             if op_name == 'I':
-                chave, registro = op[1], op[2]  # Desempacotar para 3 elementos
+                chave = int(op[1])
+                registro = int(op[2])
                 arvore_b.inserir(chave, registro)
 
             elif op_name == 'R':
-                chave = op[1]  # Apenas a chave para remoção
+                # Usa apenas o primeiro token após 'R' como chave, mesmo que haja tokens extras.
+                chave = int(op[1])
                 arvore_b.remover(chave)
 
             elif op_name == 'B':
-                chave = op[1]  # Apenas a chave para busca
+                chave = int(op[1])
                 encontrado = arvore_b.buscar(chave)
                 resultado = "O REGISTRO ESTA NA ARVORE!" if encontrado else "O REGISTRO NAO ESTA NA ARVORE!"
                 resultados_busca.append(resultado)
         except Exception as e:
             print(f"Erro durante o processamento: {e}\n")
 
-        finally:
-            continue
+
     # Ajeitar a saída como esperado 
     estado_arvore = arvore_b.percorrer_em_largura()
 

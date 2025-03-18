@@ -26,8 +26,15 @@ class ProcessamentoDados:
                         self.operacoes.append(('I', chave, registro))
 
                     elif tipo_operacao == 'R':
-                        chave = int(conteudo)
-                        self.operacoes.append(('R', chave))
+                        # Divide o conteúdo e remove espaços extras
+                        elementos = [elem.strip() for elem in conteudo.split(',')]
+                        
+                        if len(elementos) >= 2:
+                            print(f"Aviso: Operação de remoção mal formatada ignorada -> {linha}")
+                            continue  # Ignora a operação mal formatada
+                        else:
+                            chave = int(elementos[0])  # Usa o único valor presente
+                            self.operacoes.append(('R', chave))
 
                     elif tipo_operacao == 'B':
                         chave = int(conteudo)
@@ -39,6 +46,7 @@ class ProcessamentoDados:
         except Exception as e:
             print(f"Erro durante leitura do arquivo: {e}")
             sys.exit(1)
+
 
     def adicionar_resultado_busca(self, chave, encontrado):
         if encontrado:
