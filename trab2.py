@@ -1,3 +1,6 @@
+# Wyctor Fogos da Rocha
+# matrícula: 2024230514
+
 import sys
 import os
 from models.arvore_b import ArvoreB
@@ -30,7 +33,6 @@ if __name__ == '__main__':
                 arvore_b.inserir(chave, registro)
 
             elif op_name == 'R':
-                # Usa apenas o primeiro token após 'R' como chave, mesmo que haja tokens extras.
                 chave = int(op[1])
                 arvore_b.remover(chave)
 

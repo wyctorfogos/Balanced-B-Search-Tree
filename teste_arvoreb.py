@@ -1,3 +1,6 @@
+# Wyctor Fogos da Rocha
+# matrícula: 2024230514
+
 from models.arvore_b import ArvoreB
 
 if __name__ == "__main__":

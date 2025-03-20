@@ -1,3 +1,5 @@
+# Wyctor Fogos da Rocha
+# matrícula: 2024230514
 class NodaArvoreB:
     def __init__(self, ordem, folha=True):
         self.ordem = ordem
