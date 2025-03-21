@@ -11,8 +11,8 @@ if __name__ == "__main__":
     print("Árvore B em largura antes da remoção:")
     print("\n".join(arvore.percorrer_em_largura()))
 
-    print("\nBusca por 12:", arvore.buscar(12))  # True
-    print("Busca por 40:", arvore.buscar(40))   # False
+    print("\nBusca por 12:", arvore.buscar(12))
+    print("Busca por 40:", arvore.buscar(40))
 
     arvore.remover(12)
     arvore.remover(5)

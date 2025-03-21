@@ -28,14 +28,18 @@ if __name__ == '__main__':
     resultados_busca = TadPilha()
 
     for op in processamento.operacoes:
+        # Cada operação é tratada de forma individual
+        # Aqui se tentar processar o que foi pedido, caso haja algum problema o 'Exception' irá identificar o erro
         try:
             op_name = op[0]
-
-            if op_name == 'I':
+            ## Operação de inserção dos dados
+            # Inserção uso da chave e do registro a ser processado na folha 
+            if op_name == 'I':      
                 chave = int(op[1])
                 registro = int(op[2])
                 arvore_b.inserir(chave, registro)
 
+            # Operação de remoção
             elif op_name == 'R':
                 chave = int(op[1])
                 arvore_b.remover(chave)
