@@ -33,8 +33,10 @@ class ProcessamentoDados:
                         elementos = [elem.strip() for elem in conteudo.split(',')]
                         
                         if len(elementos) >= 2:
+                            # Caso tenha mais de um valor (caso esteja errado), filtra o primeiro elemento e realiza a remoção
                             print(f"Aviso: Operação de remoção mal formatada ignorada -> {linha}")
-                            continue  # Ignora a operação mal formatada
+                            conteudo.split(',')
+                            chave = int(conteudo.split(',')[0])  # Usa o único valor presente
                         else:
                             chave = int(elementos[0])  # Usa o único valor presente
                             self.operacoes.append(('R', chave))
