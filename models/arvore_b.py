@@ -9,8 +9,12 @@ class ArvoreB:
         self.raiz = NodaArvoreB(ordem)
 
     def buscar(self, chave, no=None):
+        # Procura recursivamente pela chave na árvore. 
+        # Inicia a busca na raiz (ou em um nó informado).
         if no is None:
             no = self.raiz
+
+        # Percorre as chaves do nó atual para identificar a posição correta.
         i = 0
         while i < len(no.chaves) and chave > no.chaves[i]:
             i += 1
@@ -22,19 +26,24 @@ class ArvoreB:
         # Se for nó folha e a chave não existir
         if no.folha:
             return False
-
+        # Se o nó não for folha, a função chama a si mesma para o filho apropriado.
         return self.buscar(chave, no.filhos[i])
 
     def inserir(self, chave, registro):
+        # Insere uma nova chave e seu registro associado na árvore.
         raiz = self.raiz
+        
+        # Antes da inserção, verifica se a raiz está cheia.
         if len(raiz.chaves) == self.ordem - 1:
             nova_raiz = NodaArvoreB(self.ordem, folha=False)
             nova_raiz.filhos.append(raiz)
             self._dividir_filho(nova_raiz, 0, raiz)
             self.raiz = nova_raiz
+        # Chama  _inserir_nao_cheio para inserir a chave em um nó que tenha espaço disponível.
         self._inserir_nao_cheio(self.raiz, chave, registro)
 
     def _inserir_nao_cheio(self, no, chave, registro):
+        # Insere a chave em um nó que ainda não está cheio.
         i = len(no.chaves) - 1
         if no.folha:
             # Procura a posição para inserir a nova chave
@@ -58,6 +67,7 @@ class ArvoreB:
             self._inserir_nao_cheio(no.filhos[i], chave, registro)
 
     def _dividir_filho(self, pai, i, filho):
+        # Divide um nó filho que está cheio, promovendo a chave mediana para o nó pai.
         ordem = self.ordem
         # Cálculo do índice do meio; observe que a definição pode variar conforme a implementação
         meio = (ordem // 2) - 1  
@@ -76,11 +86,13 @@ class ArvoreB:
         else:
             novo_no.filhos = filho.filhos[meio + 1:]
             filho.filhos = filho.filhos[:meio + 1]
-
+        
+        # Em nós folha, os registros associados são também divididos.
         pai.chaves.insert(i, chave_sobe)
         pai.filhos.insert(i + 1, novo_no)
 
     def remover(self, chave, no=None):
+        #  Remove uma chave da árvore B, tratando casos em que a chave está em um nó folha ou em um nó interno.
         if no is None:
             no = self.raiz
 
@@ -89,11 +101,12 @@ class ArvoreB:
             i += 1
 
         if i < len(no.chaves) and chave == no.chaves[i]:
-            # Chave encontrada
+            # Se a chave estiver em um nó folha, é simplesmente removida.
             if no.folha:
                 no.chaves.pop(i)
                 if no.registros:
                     no.registros.pop(i)
+            # Se a chave estiver em um nó interno, tenta substituí-la pelo predecessor (maior chave à esquerda) ou sucessor (menor chave à direita)
             else:
                 # Em nó interno, substitui a chave pelo seu sucessor
                 sucessor_chave, sucessor_registro, no_sucessor = self._pegar_sucessor(no.filhos[i + 1])
@@ -121,7 +134,7 @@ class ArvoreB:
         if no == self.raiz or len(no.chaves) >= ((self.ordem + 1) // 2) - 1:
             return
 
-        pai = self._encontrar_pai(self.raiz, no)
+        pai = self._encontrar_no_pai(self.raiz, no)
         if pai is None:
             return
 
@@ -173,28 +186,27 @@ class ArvoreB:
             self._balancear_depois_remover(pai)
 
     def _pegar_sucessor(self, no):
-        """
-        Retorna uma tupla (chave, registro, nó) correspondendo à
-        chave de menor valor (sucessora) na subárvore direita e o nó onde ela se encontra.
-        """
+        # Retorna a menor chave (e seu registro) da subárvore do nó informado.
         while not no.folha:
             no = no.filhos[0]
         if no.registros:
             return no.chaves[0], no.registros[0], no
         return no.chaves[0], None, no
 
-    def _encontrar_pai(self, no, filho):
+    def _encontrar_no_pai(self, no, filho):
+        # Localiza recursivamente o nó pai de um nó específico.
         if no is None or no.folha:
             return None
         for f in no.filhos:
             if f == filho:
                 return no
-            p = self._encontrar_pai(f, filho)
+            p = self._encontrar_no_pai(f, filho)
             if p:
                 return p
         return None
 
     def percorrer_em_largura(self):
+        #  Faz a varredura da árvore, retornando a representação dos nós pra cada nível.
         if not self.raiz:
             return []
     
